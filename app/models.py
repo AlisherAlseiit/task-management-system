@@ -19,7 +19,7 @@ class User(Base):
     password = Column(String, nullable=False)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
 
-    boards = relationship('Board', back_populates='user')
+    boards = relationship('Board', back_populates='owner')
     cards = relationship('Card', secondary=CardMembers, back_populates='users')
     comments = relationship('Comment', back_populates='user')
 
@@ -28,11 +28,11 @@ class Board(Base):
     __tablename__ = "boards"
 
     id = Column(Integer, primary_key=True, nullable=False)
-    name = Column(String, nullable=False, unique=True)
+    name = Column(String, nullable=False)
     owner_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
 
-    user = relationship('User', back_populates='boards')
+    owner = relationship('User', back_populates='boards')
     lists = relationship('List', back_populates='board')
 
 
@@ -77,3 +77,11 @@ class Comment(Base):
 
     card = relationship('Card', back_populates='comments')
     user = relationship('User', back_populates='comments')
+
+
+class BoardMember(Base):
+    __tablename__ = "board_members"
+
+    user_id = Column(Integer, ForeignKey('users.id', ondelete='CASCADE'), primary_key=True)
+    board_id = Column(Integer, ForeignKey('boards.id', ondelete='CASCADE'), primary_key=True)
+    role = Column(String, nullable=False, server_default="observer")

@@ -12,3 +12,9 @@ def hash(password: str):
 
 def verify(plain_password, hash_password):
     return pwd_contenxt.verify(plain_password, hash_password)
+
+
+class Roles(str, Enum):
+    ADMIN = "admin"
+    MEMBER = "member"
+    OBSERVER = "observer"

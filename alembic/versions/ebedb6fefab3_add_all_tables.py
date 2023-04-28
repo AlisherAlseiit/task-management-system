@@ -31,36 +31,35 @@ def upgrade() -> None:
 
     op.create_table('boards',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('name', sa.String(), nullable=False),
+    sa.Column('name', sa.String(), nullable=False, unique=False),
     sa.Column('owner_id', sa.Integer(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['owner_id'], ['users.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('name')
+    sa.PrimaryKeyConstraint('id')
     )
 
     op.create_table('lists',
-    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('id', sa.Integer(), server_default=sa.Identity(start=1), nullable=False),
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('position', sa.Integer(), nullable=False),
     sa.Column('board_id', sa.Integer(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.ForeignKeyConstraint(['board_id'], ['boards.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('position')
+    sa.PrimaryKeyConstraint('position', 'board_id'),
+    sa.UniqueConstraint('id'),
+    sa.ForeignKeyConstraint(['board_id'], ['boards.id'], ondelete='CASCADE')
     )
 
     op.create_table('cards',
-    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('id', sa.Integer(), server_default=sa.Identity(start=1), nullable=False),
     sa.Column('title', sa.String(), nullable=False),
     sa.Column('description', sa.String(), nullable=True),
     sa.Column('position', sa.Integer(), nullable=False),
     sa.Column('due_date', sa.TIMESTAMP(timezone=True), nullable=True),
     sa.Column('list_id', sa.Integer(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.ForeignKeyConstraint(['list_id'], ['lists.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('position')
+    sa.PrimaryKeyConstraint('position', 'list_id'),
+    sa.UniqueConstraint('id'),
+    sa.ForeignKeyConstraint(['list_id'], ['lists.id'], ondelete='CASCADE')
     )
 
     op.create_table('card_members',

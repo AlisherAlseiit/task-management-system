@@ -32,7 +32,7 @@ class Token(BaseModel):
 
 
 class TokenData(BaseModel):
-    email: str | None = None
+    uid: str | None = None
 
 
 class BoardBase(BaseModel):
@@ -72,5 +72,45 @@ class BoardOut(BoardBase):
     class Config:
         orm_mode = True
 
+
+class CardBase(BaseModel):
+    title: str
+    description: str | None = None
+    position: int
+    due_date: datetime | None = None
+
+
+class CardCreate(CardBase):
+    pass
+
+
+class CardOut(CardBase):
+    id: int
+    list_id: int
+    created_at: datetime
+
+    class Config:
+        orm_mode = True
+
+
+
+class CommentBase(BaseModel):
+    comment_text: str
+
+
+class CommentCreate(CommentBase):
+    pass
+
+
+class CommentOut(CommentBase):
+    id: int
+    card_id: int
+    created_at: datetime
+    updated_at: datetime | None = None
+
+    user: User
+
+    class Config:
+        orm_mode = True
 
 

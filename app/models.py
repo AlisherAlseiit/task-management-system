@@ -5,8 +5,8 @@ from .database import Base
 
 
 CardMembers = Table('card_members', Base.metadata,
-    Column('user_id', Integer, ForeignKey('users.id'), primary_key=True),
-    Column('card_id', Integer, ForeignKey('cards.id'), primary_key=True)
+    Column('user_id', Integer, ForeignKey('users.id', ondelete='CASCADE'), primary_key=True),
+    Column('card_id', Integer, ForeignKey('cards.id', ondelete='CASCADE'), primary_key=True)
 )
 
 
@@ -39,10 +39,10 @@ class Board(Base):
 class List(Base):
     __tablename__ = "lists"
 
-    id = Column(Integer, primary_key=True, nullable=False)
+    id = Column(Integer, autoincrement=True, primary_key=True, nullable=False)
     name = Column(String, nullable=False)
-    position = Column(Integer, nullable=False, unique=True)
-    board_id = Column(Integer, ForeignKey("boards.id", ondelete="CASCADE"), nullable=False)
+    position = Column(Integer, nullable=False, primary_key=True)
+    board_id = Column(Integer, ForeignKey("boards.id", ondelete="CASCADE"), nullable=False, primary_key=True)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     
     board = relationship('Board', back_populates='lists')
@@ -52,12 +52,12 @@ class List(Base):
 class Card(Base):
     __tablename__ = "cards"
 
-    id = Column(Integer, primary_key=True, nullable=False)
+    id = Column(Integer, autoincrement=True, primary_key=True, nullable=False)
     title = Column(String, nullable=False)
-    description = Column(String)
-    position = Column(Integer, nullable=False, unique=True)
-    due_date = Column(TIMESTAMP(timezone=True))
-    list_id = Column(Integer, ForeignKey("lists.id", ondelete="CASCADE"), nullable=False)
+    description = Column(String, nullable=True)
+    position = Column(Integer, nullable=False, primary_key=True)
+    due_date = Column(TIMESTAMP(timezone=True), nullable=True)
+    list_id = Column(Integer, ForeignKey("lists.id", ondelete="CASCADE"), nullable=False, primary_key=True)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
 
     list = relationship('List', back_populates='cards')

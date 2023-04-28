@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from fastapi import HTTPException, status
 
 from .. import schemas, utils, models
 
@@ -23,22 +24,8 @@ def get_board_by_id(db: Session, id: int):
     return board
 
 
-def create_list(db: Session, list: schemas.ListCreate, board_id: int):
-    new_list = models.List(**list.dict(), board_id=board_id)
-
-    db.add(new_list)
-    db.commit()
-    db.refresh(new_list)
-
-    return new_list
-
-
-
-def get_lists(db: Session):
-    lists = db.query(models.List).all()
-    return lists
-
-
-def get_list(db: Session, id: int):
-    list = db.query(models.List).filter(models.List.id == id).first()
-    return list
+def validate_board_presence(db: Session, board_id: int):
+    board = get_board_by_id(db, board_id)
+    if not board:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="board not found")
+    return board

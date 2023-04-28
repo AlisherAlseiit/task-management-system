@@ -22,6 +22,6 @@ def login(user_credentials: Annotated[OAuth2PasswordRequestForm, Depends()], db:
     if not utils.verify(user_credentials.password, user.password):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Invalid Credentials")
     
-    access_token = oauth2.create_access_token(data={"sub": user_credentials.username})
+    access_token = oauth2.create_access_token(data={"uid": user.id})
 
     return {"access_token": access_token, "token_type": "bearer"}

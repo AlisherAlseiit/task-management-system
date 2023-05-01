@@ -29,3 +29,4 @@ def validate_board_presence(db: Session, board_id: int):
     if not board:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="board not found")
     return board
+

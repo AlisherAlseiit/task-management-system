@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .routers import user, auth, board, list, card, comment
+from .routers import user, auth, board, list, card, comment, board_member
 
 app = FastAPI()
 
@@ -23,6 +23,7 @@ app.include_router(board.router)
 app.include_router(list.router)
 app.include_router(card.router)
 app.include_router(comment.router)
+app.include_router(board_member.router)
 
 
 @app.get("/")

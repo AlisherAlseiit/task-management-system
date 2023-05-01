@@ -1,10 +1,15 @@
 from typing import Annotated
 
+
 from fastapi import APIRouter, Depends, status, Response, HTTPException
 from sqlalchemy.orm import Session
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 from ..database import get_db
 from .. import schemas, oauth2, models, utils
+from ..config import settings
 from ..crud import users_crud, boards_crud
 
 
@@ -33,6 +38,9 @@ def get_board(board_id: int, db: Annotated[Session, Depends(get_db)], current_us
 def create_board(board: schemas.BoardCreate, db: Annotated[Session, Depends(get_db)], current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)]):
     new_board = boards_crud.create_board(db, board, current_user.id)
     return new_board
+
+
+
 
     
 

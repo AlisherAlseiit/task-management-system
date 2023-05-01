@@ -63,3 +63,25 @@ def get_comments(board_id: int,
     comments_crud.delete_comment(db, comment_id)
 
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+@router.put("/{board_id}/lists/{list_id}/cards/{card_id}/comments/{comment_id}", response_model=schemas.CommentOut)
+def get_comments(board_id: int, 
+                   list_id: int,
+                   card_id: int,
+                   comment_id: int,
+                   updated_comment: schemas.CommentCreate,
+                   db: Annotated[Session, Depends(get_db)], 
+                   current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)]):
+    board = boards_crud.validate_board_presence(db, board_id)
+    users_crud.check_board_permissions(db, board, current_user.id, roles=[utils.Roles.ADMIN.value, utils.Roles.MEMBER.value])
+    _ = lists_crud.validate_list_presence(db, board_id, list_id)
+    _ = cards_crud.validate_card_presence(db, list_id, card_id)
+    
+    comment = comments_crud.get_user_comment(db, card_id, comment_id, current_user.id)
+    if not comment:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="comment not found")
+    comments_crud.update_comment(db, updated_comment, comment_id)
+    return comment
+
+    

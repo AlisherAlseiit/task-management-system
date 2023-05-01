@@ -114,3 +114,21 @@ class CommentOut(CommentBase):
         orm_mode = True
 
 
+class BoardMememberOut(BaseModel):
+    user_id: int
+    board_id: int
+    role: str
+    
+    class Config:
+        orm_mode = True
+
+class BoardMemberUpdate(BaseModel):
+    role: str
+
+
+class InvitationCreate(BaseModel):
+    recipient_email: str
+
+
+
+

@@ -85,3 +85,5 @@ class BoardMember(Base):
     user_id = Column(Integer, ForeignKey('users.id', ondelete='CASCADE'), primary_key=True)
     board_id = Column(Integer, ForeignKey('boards.id', ondelete='CASCADE'), primary_key=True)
     role = Column(String, nullable=False, server_default="observer")
+
+    board = relationship('Board')

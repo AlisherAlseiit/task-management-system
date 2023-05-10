@@ -4,10 +4,17 @@ from sqlalchemy.orm import relationship
 from .database import Base
 
 
-CardMembers = Table('card_members', Base.metadata,
-    Column('user_id', Integer, ForeignKey('users.id', ondelete='CASCADE'), primary_key=True),
-    Column('card_id', Integer, ForeignKey('cards.id', ondelete='CASCADE'), primary_key=True)
-)
+# CardMembers = Table('card_members', Base.metadata,
+#     Column('user_id', Integer, ForeignKey('users.id', ondelete='CASCADE'), primary_key=True),
+#     Column('card_id', Integer, ForeignKey('cards.id', ondelete='CASCADE'), primary_key=True)
+# )
+
+
+class CardMembers(Base):
+    __tablename__ = "card_members"
+    
+    user_id = Column('user_id', Integer, ForeignKey('users.id', ondelete='CASCADE'), primary_key=True)
+    card_id = Column('card_id', Integer, ForeignKey('cards.id', ondelete='CASCADE'), primary_key=True)
 
 
 class User(Base):
@@ -20,7 +27,7 @@ class User(Base):
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
 
     boards = relationship('Board', back_populates='owner')
-    cards = relationship('Card', secondary=CardMembers, back_populates='users')
+    # cards = relationship('Card', secondary=CardMembers, back_populates='users')
     comments = relationship('Comment', back_populates='user')
 
 
@@ -61,7 +68,7 @@ class Card(Base):
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
 
     list = relationship('List', back_populates='cards')
-    users = relationship('User', secondary=CardMembers, back_populates='cards')
+    # users = relationship('User', secondary=CardMembers, back_populates='cards')
     comments = relationship('Comment', back_populates="card")
 
 

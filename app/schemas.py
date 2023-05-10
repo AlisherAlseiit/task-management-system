@@ -1,12 +1,12 @@
 from datetime import datetime
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class UserCreate(BaseModel):
     username: str
     email: str
-    password: str
+    password: str = Field(min_length=8, description="The password count must be greater than 8")
 
 
 class UserBase(BaseModel):
@@ -91,6 +91,28 @@ class CardOut(CardBase):
 
     class Config:
         orm_mode = True
+
+
+class CardMemberOut(BaseModel):
+    card_id: int
+    user_id: int
+
+    class Config:
+        orm_mode = True
+
+
+class CardMember(BaseModel):
+    id: int
+    username: str
+    email: str
+    created_at: datetime
+
+    class Config:
+        orm_mode = True
+
+
+class CradMemberCreate(BaseModel):
+    user_id: int
 
 
 

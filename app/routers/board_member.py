@@ -15,7 +15,7 @@ from ..crud import users_crud, boards_crud, board_members_crud
 
 router = APIRouter(
     prefix="/boards",
-    tags=['boards']
+    tags=['board_members']
 )
 
 

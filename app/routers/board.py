@@ -20,8 +20,8 @@ router = APIRouter(
 
 
 @router.get("/", response_model=list[schemas.BoardOut])
-def get_boards(db: Annotated[Session, Depends(get_db)], current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)]):
-    user_boards = boards_crud.get_boards_by_owner_id(db, current_user.id)
+def get_boards(db: Annotated[Session, Depends(get_db)], current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)], name: str = ""):
+    user_boards = boards_crud.get_boards_by_owner_id(db, current_user.id, name)
     return user_boards
 
 

@@ -14,8 +14,8 @@ def create_board(db: Session, board: schemas.BoardCreate, owner_id: int):
     return new_board
 
 
-def get_boards_by_owner_id(db: Session, owner_id: int):
-    boards = db.query(models.Board).filter(models.Board.owner_id == owner_id).all()
+def get_boards_by_owner_id(db: Session, owner_id: int, name: str = ""):
+    boards = db.query(models.Board).filter(models.Board.owner_id == owner_id, models.Board.name.contains(name)).all()
     return boards
 
 

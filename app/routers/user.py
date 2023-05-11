@@ -19,7 +19,6 @@ async def create_user(user: schemas.UserCreate, db: Annotated[Session, Depends(g
     unique_user = users_crud.get_user_by_email(db, user.email)
     if unique_user:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=f"this email already exists")
-    
     unique_username = users_crud.get_user_by_username(db, user.username)
     if unique_username:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Username is taken")
